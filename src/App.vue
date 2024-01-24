@@ -1,5 +1,6 @@
 <script setup>
-import Title from './components/Title.vue';
+import Title from './components/Title.vue'
+import Button from './components/Button.vue'
 import { useCounterStore } from './store/index.js'
 
 const store = useCounterStore()
@@ -9,6 +10,11 @@ const store = useCounterStore()
 
   <div class="container">
     <Title />
+
+    <Button @click="() => console.log('catch!')">
+      <img src="/upload-cloud.svg" alt="">
+      <span>Upload</span>
+    </Button>
   </div>
 
 
