@@ -1,11 +1,12 @@
 <script setup>
+import Title from './components/Title.vue';
 import { useCounterStore } from './store/index.js'
 
 const store = useCounterStore()
 </script>
 
 <template>
-  <h1>Pinia + Firebase Storage + Vue 3</h1>
+  <Title />
   <div>
     {{ store.name }}
   </div>
