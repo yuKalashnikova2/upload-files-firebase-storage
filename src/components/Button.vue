@@ -10,6 +10,7 @@ const emits = defineEmits(['catch'])
 
 <style lang="scss" scoped>
 .button {
+  
   border-radius: 8px;
   border: 1px solid #7f56d9;
   background: #7f56d9;

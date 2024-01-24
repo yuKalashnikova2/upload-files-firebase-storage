@@ -1,7 +1,7 @@
 <script setup>
 import Title from './components/Title.vue'
-import Button from './components/Button.vue'
 import { useCounterStore } from './store/index.js'
+import EmptyState from './components/EmptyState.vue';
 
 const store = useCounterStore()
 </script>
@@ -10,11 +10,10 @@ const store = useCounterStore()
 
   <div class="container">
     <Title />
-
-    <Button @click="() => console.log('catch!')">
-      <img src="/upload-cloud.svg" alt="">
-      <span>Upload</span>
-    </Button>
+    <div class="content">
+      <EmptyState />
+    </div>
+ 
   </div>
 
 
@@ -26,5 +25,10 @@ const store = useCounterStore()
     margin: 0 auto;
     border-radius: 8px;
     background: white;
+  }
+  .content {
+    max-width: 512px;
+    margin: 0 auto;
+    padding: 40px 0;
   }
 </style>
