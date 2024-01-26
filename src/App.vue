@@ -2,18 +2,18 @@
 import Title from './components/Title.vue'
 import { useCounterStore } from './store/index.js'
 import EmptyState from './components/EmptyState.vue';
-
+import Cards from './components/Cards.vue';
 const store = useCounterStore()
 </script>
 
 <template>
 
   <div class="container">
-    <Title />
+    <Title label="My project" />
     <div class="content">
       <EmptyState />
     </div>
- 
+ <Cards />
   </div>
 
 
@@ -25,6 +25,7 @@ const store = useCounterStore()
     margin: 0 auto;
     border-radius: 8px;
     background: white;
+ 
   }
   .content {
     max-width: 512px;

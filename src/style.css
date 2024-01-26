@@ -3,7 +3,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
   padding: 0;
 }
 a {
@@ -14,4 +13,10 @@ body {
   font-family: 'Inter', sans-serif;
   background: #eaecf0;
 }
-
+.p-24 {
+  padding: 16px 24px;
+}
+.gap-70 {
+  display: flex;
+  gap: 80px;
+}
