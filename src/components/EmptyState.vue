@@ -1,25 +1,27 @@
 <script setup>
 import InputFile from './InputFile.vue'
+import { useFilesStore } from '../stores/files.js'
 import { ref } from 'vue'
 
-const files = ref([])
+const store = useFilesStore()
+// const files = ref([])
 
-const handleFileChange = (event) => {
-  files.value = files.value.concat(Array.from(event.target.files))
-}
+// const handleFileChange = (event) => {
+//   files.value = files.value.concat(Array.from(event.target.files))
+// }
 
-const areaDropFiles = (event) => {
-  event.preventDefault()
-  const newFiles = Array.from(event.dataTransfer.files)
-  files.value = files.value.concat(newFiles)
-}
+// const areaDropFiles = (event) => {
+//   event.preventDefault()
+//   const newFiles = Array.from(event.dataTransfer.files)
+//   files.value = files.value.concat(newFiles)
+// }
 </script>
 
 <template>
   <form class="empty-state" @submit.prevent>
     <div
       class="empty-state__border"
-      @drop="areaDropFiles"
+      @drop="store.areaDropFiles"
       @dragover.prevent
       @dragenter.prevent
     >
@@ -34,8 +36,9 @@ const areaDropFiles = (event) => {
         your files.
       </p>
     </div>
+  
 
-    <InputFile :files="files" @handle-file-change="handleFileChange" />
+    <InputFile @handle-file-change="store.handleFileChange" />
   </form>
 </template>
 
