@@ -3,6 +3,8 @@ import Title from './components/Title.vue'
 import { useCounterStore } from './store/index.js'
 import EmptyState from './components/EmptyState.vue';
 import Cards from './components/Cards.vue';
+
+
 const store = useCounterStore()
 </script>
 
@@ -11,6 +13,7 @@ const store = useCounterStore()
   <div class="container">
     <Title label="My project" />
     <div class="content">
+
       <EmptyState />
     </div>
  <Cards />

@@ -1,18 +1,18 @@
 <script setup>
 import CardFile from './CardFile.vue'
 import Title from './Title.vue'
-import Button from './Button.vue'
+import InputFile from './InputFile.vue'
 </script>
 
 <template>
   <div class="cards">
     <div class="cards__header">
       <Title label="Files uploaded" />
+
+     
       <div class="p-24">
-        <Button @click="() => console.log('catch!')">
-          <img src="/upload-cloud.svg" alt="upload" />
-          <span>Upload</span>
-        </Button>
+        <InputFile />
+
       </div>
     </div>
     <div class="cards__body">
