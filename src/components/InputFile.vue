@@ -1,20 +1,25 @@
 <script setup>
-const emit = defineEmits(['handleFileChange'])
+// const emit = defineEmits(['handleFileChange'])
 
+import { useFilesStore } from '../stores/files.js'
+const store = useFilesStore()
 </script>
 
 <template>
   <div class="upload">
     <img class="upload__image" src="/upload-cloud.svg" alt="upload" />
-    <label class="upload__label" for="upload-file">Проверка
-    </label>
-    <input @change="emit('handleFileChange', $event)" type="file" name="upload-file" id="upload-file" class="upload__input" 
- />
-
+    <label class="upload__label" for="upload-file">Upload</label>
+    <input
+      @change="store.handleFileChange"
+      type="file"
+      name="upload-file"
+      id="upload-file"
+      class="upload__input"
+    />
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .upload {
   border-radius: 8px;
   border: 1px solid #7f56d9;
@@ -31,8 +36,8 @@ const emit = defineEmits(['handleFileChange'])
   font-weight: 500;
   line-height: 20px;
   &:hover {
-      opacity: 0.8;
-      cursor: pointer;   
+    opacity: 0.8;
+    cursor: pointer;
   }
   &__label {
     &:hover {
@@ -47,7 +52,6 @@ const emit = defineEmits(['handleFileChange'])
     // overflow: hidden;
     // position: absolute;
     // z-index: -1;
-
   }
 }
 </style>

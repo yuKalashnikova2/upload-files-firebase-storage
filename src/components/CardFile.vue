@@ -1,38 +1,84 @@
 <script setup>
-const props = defineProps({
-  extension: {
-    type: String,
-    default: 'jpg',
-  },
-  file__size: {
-    type: String,
-    default: '1.5 MB',
-  },
-})
+import { ref } from 'vue'
+import { useFilesStore } from '../stores/files.js'
+
+const store = useFilesStore()
+
+const isDrawer = ref(false)
+
+const dataUpload = ref(
+  new Date().toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+)
+
+const chooseIconImage = (str) => {
+  let lastThree = str.slice(-3)
+  if (
+    lastThree === 'jpg' ||
+    lastThree === 'peg' ||
+    lastThree === 'png' ||
+    lastThree === 'svg'
+  ) {
+    return 'image.svg'
+  }
+  if (lastThree === 'pdf' || lastThree === 'docx') {
+    return 'text.svg'
+  }
+
+  if (lastThree === 'mp4') {
+    return 'video.svg'
+  }
+
+  if (lastThree === 'fig') {
+    return 'figma.svg'
+  }
+  if (lastThree === 'framerx') {
+    return 'framer.svg'
+  } else {
+    return 'text.svg'
+  }
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) {
+    return bytes + ' bytes'
+  } else if (bytes < 1024 * 1024) {
+    return Math.floor(bytes / 1024) + ' KB'
+  } else {
+    return Math.floor(bytes / (1024 * 1024)) + ' MB'
+  }
+}
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" v-for="file in store.files">
     <div class="card__main">
       <div class="card__main-img">
-        <img src="/files/file.svg" alt="" />
+        <img :src="'/files/' + chooseIconImage(file.name)" alt="" />
       </div>
       <div class="card__main-description">
-        <h2 class="card__main-description__title">Title.{{ extension }}</h2>
-        <span class="card__main-description__size">{{ file__size }}</span>
+        <h2 class="card__main-description__title">{{ file.name }}</h2>
+        <span class="card__main-description__size"
+          >{{ formatFileSize(file.size) }}
+        </span>
       </div>
     </div>
-
     <div class="card__info">
-      <div class="card__info-size">
-        {{ file__size }}
+      <div class="card__info-size">{{ formatFileSize(file.size) }}</div>
+
+      <div class="card__info-date">{{ dataUpload }}</div>
+
+      <div class="card__info-img" @click="isDrawer = !isDrawer">
+        <img src="/more.svg" alt="more" v-if="!isDrawer" />
+
+        <div class="card__info-img-drawer">
+         <button class="upload" v-if="isDrawer" @click="store.removeFile(file)">Delete file</button> 
+        </div>
       </div>
 
-      <div class="card__info-date">22 Jan, 2022</div>
-
-      <div class="card__info-imf">
-        <img src="/more.svg" alt="more" />
-      </div>
     </div>
   </div>
 </template>
@@ -75,12 +121,13 @@ const props = defineProps({
   &__info {
     display: flex;
     gap: 70px;
-
     color: #667085;
-
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
+    &-img {
+      cursor: pointer;
+    }
   }
 }
 </style>

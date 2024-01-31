@@ -6,6 +6,7 @@ export const useFilesStore = defineStore('files', () => {
 
   const handleFileChange = (event) => {
     files.value = files.value.concat(Array.from(event.target.files))
+    console.log('files', files.value)
   }
 
   const areaDropFiles = (event) => {
@@ -14,5 +15,9 @@ export const useFilesStore = defineStore('files', () => {
     files.value = files.value.concat(newFiles)
   }
 
-  return { files, handleFileChange, areaDropFiles }
+  const removeFile = (file) => {
+    return files.value.splice(files.value.indexOf(file), 1)
+  }
+
+  return { files, handleFileChange, areaDropFiles, removeFile }
 })
