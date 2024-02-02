@@ -3,6 +3,7 @@
 
 import { useFilesStore } from '../stores/files.js'
 const store = useFilesStore()
+
 </script>
 
 <template>

@@ -15,7 +15,7 @@ const firebaseConfig = {
 }
 
 let defaultProject = initializeApp(firebaseConfig)
-let defaultStorage = getStorage(defaultProject)
+export let defaultStorage = getStorage(defaultProject)
 
 const pinia = createPinia()
 createApp(App).use(pinia).mount('#app')
