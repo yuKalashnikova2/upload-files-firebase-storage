@@ -1,5 +1,4 @@
 <script setup>
-// const emit = defineEmits(['handleFileChange'])
 
 import { useFilesStore } from '../stores/files.js'
 const store = useFilesStore()
@@ -47,12 +46,6 @@ const store = useFilesStore()
   }
   &__input {
     display: none;
-    // width: 100%;
-    // height: auto;
-    // opacity: 0;
-    // overflow: hidden;
-    // position: absolute;
-    // z-index: -1;
   }
 }
 </style>
