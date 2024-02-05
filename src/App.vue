@@ -2,12 +2,14 @@
 import Title from './components/Title.vue'
 import EmptyState from './components/EmptyState.vue'
 import Cards from './components/Cards.vue'
+import Preloader from './components/Preloader.vue'
 import { useFilesStore } from './stores/files.js'
 const store = useFilesStore()
 </script>
 
 <template>
   <div class="container">
+    <Preloader v-if="store.isLoading" />
     <Title label="My project" />
     <div class="content" v-if="store.files.length === 0">
       <EmptyState />

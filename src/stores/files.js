@@ -20,6 +20,7 @@ export const useFilesStore = defineStore('files', () => {
 
   const fetchFilesFromFirebase = async () => {
     try {
+      isLoading.value = true
       const listRef = ref(storage, 'images/')
       const listResult = await listAll(listRef)
       for (const itemRef of listResult.items) {
@@ -31,12 +32,16 @@ export const useFilesStore = defineStore('files', () => {
       isError.value = true
       console.error('ERROR', error)
     }
+    finally {
+      isLoading.value = false
+    }
   }
 
   onMounted(fetchFilesFromFirebase)
 
   const handleFileChange = async (event) => {
     try {
+      isLoading.value = true
       const newFiles = Array.from(event.target.files)
       files.value = files.value.concat(newFiles)
 
@@ -47,11 +52,14 @@ export const useFilesStore = defineStore('files', () => {
       }
     } catch (error) {
       console.error('ОШИБКА', error)
+    } finally {
+      isLoading.value = false
     }
   }
 
   const areaDropFiles = async (event) => {
     try {
+      isLoading.value = true
       event.preventDefault()
       const newFiles = Array.from(event.dataTransfer.files)
       files.value = files.value.concat(newFiles)
@@ -63,16 +71,21 @@ export const useFilesStore = defineStore('files', () => {
       }
     } catch (error) {
       console.error('ОШИБКА', error)
+    } finally {
+      isLoading.value = false
     }
   }
 
   const removeFile = async (file) => {
     try {
+      isLoading.value = true
       const imageRef = ref(storage, 'images/' + file.name)
       await deleteObject(imageRef)
       files.value = files.value.filter((f) => f !== file)
     } catch (error) {
       console.error('ОШИБКА УДАЛЕНИЯ ЭЛЕМЕНТА', error)
+    } finally {
+      isLoading.value = false
     }
   }
 
