@@ -9,10 +9,10 @@ const store = useFilesStore()
 <template>
   <div class="container">
     <Title label="My project" />
-    <div class="content">
-      <EmptyState v-if="store.files === []" />
-      <Cards v-else />
+    <div class="content" v-if="store.files.length === 0">
+      <EmptyState />
     </div>
+    <Cards v-else />
   </div>
 </template>
 
