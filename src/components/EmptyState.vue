@@ -1,7 +1,6 @@
 <script setup>
 import InputFile from './InputFile.vue'
 import { useFilesStore } from '../stores/files.js'
-import { ref } from 'vue'
 
 const store = useFilesStore()
 </script>
@@ -34,6 +33,7 @@ const store = useFilesStore()
 <style lang="scss" scoped>
 .empty-state {
   padding: 0 80px;
+  padding-bottom: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -17,6 +17,12 @@ export const useFilesStore = defineStore('files', () => {
   const isLoading = vueRef(false)
   const isDounlouded = vueRef(false)
   const isError = vueRef(false)
+  const errorMessage = vueRef('Some went wrong')
+
+  const closeError = () => {
+    console.log('РАБОТАЕТ', isError.value)
+     isError.value = false 
+    }
 
   const fetchFilesFromFirebase = async () => {
     try {
@@ -30,7 +36,8 @@ export const useFilesStore = defineStore('files', () => {
       }
     } catch (error) {
       isError.value = true
-      console.error('ERROR', error)
+      errorMessage.value = error
+      console.log('ERROR', error, isError.value)
     }
     finally {
       isLoading.value = false
@@ -51,6 +58,8 @@ export const useFilesStore = defineStore('files', () => {
         console.log(snapshot.metadata)
       }
     } catch (error) {
+      isError.value = true
+      errorMessage.value = error
       console.error('ОШИБКА', error)
     } finally {
       isLoading.value = false
@@ -70,6 +79,8 @@ export const useFilesStore = defineStore('files', () => {
         const snapshot = await uploadBytes(imageRef, file)
       }
     } catch (error) {
+      isError.value = true
+      errorMessage.value = error
       console.error('ОШИБКА', error)
     } finally {
       isLoading.value = false
@@ -83,11 +94,15 @@ export const useFilesStore = defineStore('files', () => {
       await deleteObject(imageRef)
       files.value = files.value.filter((f) => f !== file)
     } catch (error) {
+      isError.value = true
+      errorMessage.value = error
       console.error('ОШИБКА УДАЛЕНИЯ ЭЛЕМЕНТА', error)
     } finally {
       isLoading.value = false
     }
   }
+
+
 
   return {
     files,
@@ -96,6 +111,9 @@ export const useFilesStore = defineStore('files', () => {
     removeFile,
     isLoading,
     isDounlouded,
+    isError,
     fetchFilesFromFirebase,
+    errorMessage,
+    closeError
   }
 })
