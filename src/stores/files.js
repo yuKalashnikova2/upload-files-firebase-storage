@@ -8,6 +8,7 @@ import {
   getDownloadURL,
   listAll,
   getMetadata,
+  deleteObject,
 } from 'firebase/storage'
 
 export const useFilesStore = defineStore('files', () => {
@@ -42,9 +43,7 @@ export const useFilesStore = defineStore('files', () => {
       for (const file of newFiles) {
         const imageRef = ref(storage, 'images/' + file.name)
         const snapshot = await uploadBytes(imageRef, file)
-        console.log('Uploaded', snapshot.totalBytes, 'bytes.')
-        console.log('File metadata:', snapshot.metadata)
-        // const url = await getDownloadURL(snapshot.ref)
+        console.log(snapshot.metadata)
       }
     } catch (error) {
       console.error('ОШИБКА', error)
@@ -61,16 +60,20 @@ export const useFilesStore = defineStore('files', () => {
       for (const file of newFiles) {
         const imageRef = ref(storage, 'images/' + file.name)
         const snapshot = await uploadBytes(imageRef, file)
-        console.log('Uploaded', snapshot.totalBytes, 'bytes.')
-        console.log('File metadata:', snapshot.metadata)
       }
     } catch (error) {
       console.error('ОШИБКА', error)
     }
   }
 
-  const removeFile = (file) => {
-    return files.value.splice(files.value.indexOf(file), 1)
+  const removeFile = async (file) => {
+    try {
+      const imageRef = ref(storage, 'images/' + file.name)
+      await deleteObject(imageRef)
+      files.value = files.value.filter((f) => f !== file)
+    } catch (error) {
+      console.error('ОШИБКА УДАЛЕНИЯ ЭЛЕМЕНТА', error)
+    }
   }
 
   return {
