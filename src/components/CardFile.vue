@@ -60,7 +60,7 @@ function formatFileSize(bytes) {
         <img :src="'/files/' + chooseIconImage(file.name)" alt="" />
       </div>
       <div class="card__main-description">
-        <h2 class="card__main-description__title">{{ file.name }}</h2>
+        <h2 class="card__main-description__title">{{ file.name.substring(0, 10) }}</h2>
         <span class="card__main-description__size"
           >{{ formatFileSize(file.size) }}
         </span>

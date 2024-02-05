@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
-import { ref as vueRef } from 'vue'
+import { ref as vueRef, onMounted } from 'vue'
 
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
-
-
-
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  getMetadata,
+} from 'firebase/storage'
 
 export const useFilesStore = defineStore('files', () => {
   const files = vueRef([])
@@ -13,61 +17,69 @@ export const useFilesStore = defineStore('files', () => {
   const isDounlouded = vueRef(false)
   const isError = vueRef(false)
 
-  const handleFileChange = (event) => {
-    const newFiles = Array.from(event.target.files)
-    files.value = files.value.concat(newFiles)
-    console.log('НАЖАТИЕ НА КНОПКУ', files.value)
-
-    newFiles.forEach((file) => {
-      const imageRef = ref(storage, 'images/' + file.name)
-      uploadBytes(imageRef, file)
-        .then((snapshot) => {
-          console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-          console.log('File metadata:', snapshot.metadata);
-          getDownloadURL(snapshot.ref).then((url) => {
-            console.log('ФУНКЦИЯ ИЗ ФЕРБЭЙС', url);
-            // ...
-          });
-        }).catch((error) => {
-          console.error('Upload failed', error);
-        })
-    })
-
-
+  const fetchFilesFromFirebase = async () => {
+    try {
+      const listRef = ref(storage, 'images/')
+      const listResult = await listAll(listRef)
+      for (const itemRef of listResult.items) {
+        const url = await getDownloadURL(itemRef)
+        const metadata = await getMetadata(itemRef)
+        files.value.push({ name: itemRef.name, url, size: metadata.size })
+      }
+    } catch (error) {
+      isError.value = true
+      console.error('ERROR', error)
+    }
   }
 
-  const areaDropFiles = (event) => {
-    event.preventDefault()
-    const newFiles = Array.from(event.dataTransfer.files)
-    files.value = files.value.concat(newFiles)
+  onMounted(fetchFilesFromFirebase)
 
-    console.log('ПЕРЕТАСКИВАНИЕ ДРАГ ЭНД ДРОП', files.value)
+  const handleFileChange = async (event) => {
+    try {
+      const newFiles = Array.from(event.target.files)
+      files.value = files.value.concat(newFiles)
 
-    newFiles.forEach((file) => {
-      const imageRef = ref(storage, 'images/' + file.name)
+      for (const file of newFiles) {
+        const imageRef = ref(storage, 'images/' + file.name)
+        const snapshot = await uploadBytes(imageRef, file)
+        console.log('Uploaded', snapshot.totalBytes, 'bytes.')
+        console.log('File metadata:', snapshot.metadata)
+        // const url = await getDownloadURL(snapshot.ref)
+      }
+    } catch (error) {
+      console.error('ОШИБКА', error)
+    }
+  }
 
+  const areaDropFiles = async (event) => {
+    try {
+      event.preventDefault()
+      const newFiles = Array.from(event.dataTransfer.files)
+      files.value = files.value.concat(newFiles)
 
-
-      uploadBytes(imageRef, file)
-        .then((snapshot) => {
-          isLoading = true
-          console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-          getDownloadURL(snapshot.ref).then((url) => {
-            console.log('ФУНКЦИЯ ИЗ ФЕРБЭЙС', url);
-            isDounlouded.value = true
-          });
-        }).catch((error) => {
-          console.error('Upload failed', error);
-          isError.value = true
-        })
-    })
+      console.log('ПЕРЕТАСКИВАНИЕ ДРАГ ЭНД ДРОП', files.value)
+      for (const file of newFiles) {
+        const imageRef = ref(storage, 'images/' + file.name)
+        const snapshot = await uploadBytes(imageRef, file)
+        console.log('Uploaded', snapshot.totalBytes, 'bytes.')
+        console.log('File metadata:', snapshot.metadata)
+      }
+    } catch (error) {
+      console.error('ОШИБКА', error)
+    }
   }
 
   const removeFile = (file) => {
     return files.value.splice(files.value.indexOf(file), 1)
   }
 
-
-
-  return { files, handleFileChange, areaDropFiles, removeFile, isLoading, isDounlouded }
+  return {
+    files,
+    handleFileChange,
+    areaDropFiles,
+    removeFile,
+    isLoading,
+    isDounlouded,
+    fetchFilesFromFirebase,
+  }
 })
