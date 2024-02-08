@@ -27,7 +27,11 @@ body {
 } */
 .p-24 {
   padding: 16px 24px;
+  @media (max-width: 575px) {
+    padding: 5px 14px;
+  }
 }
+
 .gap-70 {
   display: flex;
   gap: 80px;

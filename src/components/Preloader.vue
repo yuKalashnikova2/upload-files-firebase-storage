@@ -26,6 +26,10 @@
     height: 200px;
     border-radius: 50%;
     animation: loader 2s linier infinite;
+    @media (max-width: 575px) {
+    width: 100px;
+    height: 100px;
+  }
 
     @keyframes loader {
       0% {
@@ -57,6 +61,9 @@
     color: #7f56d9;
     text-transform: uppercase;
     animation: text 3s linear infinite;
+    @media (max-width: 575px) {
+    font-size: 8px;
+  }
     @keyframes text {
       50% {
         color: aliceblue;

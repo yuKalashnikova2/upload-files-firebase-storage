@@ -60,7 +60,9 @@ function formatFileSize(bytes) {
         <img :src="'/files/' + chooseIconImage(file.name)" alt="" />
       </div>
       <div class="card__main-description">
-        <h2 class="card__main-description__title">{{ file.name.substring(0, 10) }}</h2>
+        <h2 class="card__main-description__title">
+          {{ file.name.substring(0, 10) }}
+        </h2>
         <span class="card__main-description__size"
           >{{ formatFileSize(file.size) }}
         </span>
@@ -75,10 +77,15 @@ function formatFileSize(bytes) {
         <img src="/more.svg" alt="more" v-if="!isDrawer" />
 
         <div class="card__info-img-drawer">
-         <button class="upload" v-if="isDrawer" @click="store.removeFile(file)">Delete file</button> 
+          <button
+            class="upload"
+            v-if="isDrawer"
+            @click="store.removeFile(file)"
+          >
+            Delete file
+          </button>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -91,11 +98,17 @@ function formatFileSize(bytes) {
   border-bottom: 1px solid #eaecf0;
   background: #f9fafb;
   padding: 16px 24px;
+  @media (max-width: 575px) {
+    padding: 13px;
+  }
   &__main {
     flex-grow: 1;
     display: flex;
     align-items: center;
     gap: 12px;
+    @media (max-width: 575px) {
+      flex-grow: 0;
+    }
     &-img {
       border-radius: 20px;
       background: #f4ebff;
@@ -116,6 +129,9 @@ function formatFileSize(bytes) {
       font-size: 14px;
       font-weight: 400;
       line-height: 20px;
+      @media (max-width: 575px) {
+        display: none;
+      }
     }
   }
   &__info {
@@ -125,6 +141,9 @@ function formatFileSize(bytes) {
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
+    @media (max-width: 575px) {
+      gap: 10px;
+    }
     &-img {
       cursor: pointer;
     }

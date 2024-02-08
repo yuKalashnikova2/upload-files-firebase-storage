@@ -34,6 +34,9 @@ import InputFile from './InputFile.vue'
   &__header {
     display: flex;
     justify-content: space-between;
+    @media (max-width: 575px) {
+    flex-direction: column;
+  }
   }
   &__body {
     & span {
@@ -47,6 +50,9 @@ import InputFile from './InputFile.vue'
       font-weight: 500;
       line-height: 18px;
       padding: 12px 24px;
+        @media (max-width: 575px) {
+    display: none;
+  }
       & > :nth-child(1) {
         flex-grow: 1;
       }

@@ -24,7 +24,6 @@ const store = useFilesStore()
         your files.
       </p>
     </div>
-  
 
     <InputFile @handle-file-change="store.handleFileChange" />
   </form>
@@ -38,6 +37,9 @@ const store = useFilesStore()
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  @media (max-width: 575px) {
+    padding: 0 20px;
+  }
   & > * {
     width: 100%;
   }
