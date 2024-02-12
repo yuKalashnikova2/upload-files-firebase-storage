@@ -69,9 +69,9 @@ function formatFileSize(bytes) {
       </div>
     </div>
     <div class="card__info">
-      <div class="card__info-size">{{ formatFileSize(file.size) }}</div>
+      <div :class="['card__info-size', { 'card__info_none': isDrawer} ]">{{ formatFileSize(file.size) }}</div>
 
-      <div class="card__info-date">{{ dataUpload }}</div>
+      <div :class="['card__info-date', { 'card__info_none': isDrawer} ]">{{ dataUpload }}</div>
 
       <div class="card__info-img" @click="isDrawer = !isDrawer">
         <img src="/more.svg" alt="more" v-if="!isDrawer" />
@@ -146,6 +146,9 @@ function formatFileSize(bytes) {
     }
     &-img {
       cursor: pointer;
+    }
+    &_none{
+      display: none;
     }
   }
 }
