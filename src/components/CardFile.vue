@@ -4,7 +4,6 @@ import { useFilesStore } from '../stores/files.js'
 
 const store = useFilesStore()
 
-const isDrawer = ref(false)
 
 const dataUpload = ref(
   new Date().toLocaleDateString('en-US', {
@@ -15,6 +14,7 @@ const dataUpload = ref(
 )
 
 const chooseIconImage = (str) => {
+  if (!str) return
   let lastThree = str.slice(-3)
   if (
     lastThree === 'jpg' ||
@@ -61,7 +61,7 @@ function formatFileSize(bytes) {
       </div>
       <div class="card__main-description">
         <h2 class="card__main-description__title">
-          {{ file.name.substring(0, 10) }}
+          {{ file.name }}
         </h2>
         <span class="card__main-description__size"
           >{{ formatFileSize(file.size) }}
@@ -69,17 +69,16 @@ function formatFileSize(bytes) {
       </div>
     </div>
     <div class="card__info">
-      <div :class="['card__info-size', { 'card__info_none': isDrawer} ]">{{ formatFileSize(file.size) }}</div>
+      <div :class="['card__info-size', { 'card__info_none': file.isDrawer} ]">{{ formatFileSize(file.size) }}</div>
 
-      <div :class="['card__info-date', { 'card__info_none': isDrawer} ]">{{ dataUpload }}</div>
-
-      <div class="card__info-img" @click="isDrawer = !isDrawer">
-        <img src="/more.svg" alt="more" v-if="!isDrawer" />
+      <div :class="['card__info-date', { 'card__info_none': file.isDrawer} ]">{{ dataUpload }}</div>
+      <div class="card__info-img" @click="file.isDrawer = !file.isDrawer">
+        <img src="/more.svg" alt="more" v-if="!file.isDrawer" />
 
         <div class="card__info-img-drawer">
           <button
             class="upload"
-            v-if="isDrawer"
+            v-if="file.isDrawer"
             @click="store.removeFile(file)"
           >
             Delete file
@@ -117,6 +116,7 @@ function formatFileSize(bytes) {
       align-items: center;
       width: 40px;
       height: 40px;
+      flex-shrink: 0;
     }
     &-description__title {
       color: #101828;
@@ -146,6 +146,11 @@ function formatFileSize(bytes) {
     }
     &-img {
       cursor: pointer;
+    }
+    &-date {
+      @media (max-width: 575px) {
+      display: none;
+    }
     }
     &_none{
       display: none;

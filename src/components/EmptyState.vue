@@ -38,7 +38,7 @@ const store = useFilesStore()
   align-items: center;
   gap: 16px;
   @media (max-width: 575px) {
-    padding: 0 20px;
+    padding: 10px 20px;
   }
   & > * {
     width: 100%;

@@ -32,7 +32,7 @@ export const useFilesStore = defineStore('files', () => {
       for (const itemRef of listResult.items) {
         const url = await getDownloadURL(itemRef)
         const metadata = await getMetadata(itemRef)
-        files.value.push({ name: itemRef.name, url, size: metadata.size })
+        files.value.push({ name: itemRef.name, url, size: metadata.size, isDrawer: false })
       }
     } catch (error) {
       isError.value = true
@@ -43,18 +43,20 @@ export const useFilesStore = defineStore('files', () => {
       isLoading.value = false
     }
   }
-
-  onMounted(fetchFilesFromFirebase)
-
+  // onMounted(fetchFilesFromFirebase)
   const handleFileChange = async (event) => {
     try {
       isLoading.value = true
+      
       const newFiles = Array.from(event.target.files)
-      files.value = files.value.concat(newFiles)
-
+      // files.value = files.value.concat(newFiles)
+      
+      console.log(newFiles)
       for (const file of newFiles) {
         const imageRef = ref(storage, 'images/' + file.name)
         const snapshot = await uploadBytes(imageRef, file)
+
+        fetchFilesFromFirebase()
         console.log(snapshot.metadata)
       }
     } catch (error) {
@@ -71,12 +73,14 @@ export const useFilesStore = defineStore('files', () => {
       isLoading.value = true
       event.preventDefault()
       const newFiles = Array.from(event.dataTransfer.files)
-      files.value = files.value.concat(newFiles)
+      // files.value = files.value.concat(newFiles)
 
       console.log('ПЕРЕТАСКИВАНИЕ ДРАГ ЭНД ДРОП', files.value)
       for (const file of newFiles) {
         const imageRef = ref(storage, 'images/' + file.name)
         const snapshot = await uploadBytes(imageRef, file)
+        fetchFilesFromFirebase()
+
       }
     } catch (error) {
       isError.value = true
