@@ -4,6 +4,7 @@ import './style.css'
 import App from './App.vue'
 import { initializeApp } from 'firebase/app'
 import { getStorage } from 'firebase/storage'
+import router from './router'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDUr0CHYVfmpVxygonZUWyUHA_dQyF3zc4',
@@ -18,4 +19,4 @@ let defaultProject = initializeApp(firebaseConfig)
 export let defaultStorage = getStorage(defaultProject)
 
 const pinia = createPinia()
-createApp(App).use(pinia).mount('#app')
+createApp(App).use(router).use(pinia).mount('#app')

@@ -16,10 +16,8 @@ const store = useFilesStore()
 
     <Preloader v-if="store.isLoading" />
     <Title label="My project" />
-    <div class="content" v-if="store.files.length === 0">
-      <EmptyState />
-    </div>
-    <Cards v-else />
+    <router-view></router-view>
+
   </div>
 </template>
 
@@ -30,8 +28,5 @@ const store = useFilesStore()
   border-radius: 8px;
   background: white;
 }
-.content {
-  max-width: 512px;
-  margin: 0 auto;
-}
+
 </style>
