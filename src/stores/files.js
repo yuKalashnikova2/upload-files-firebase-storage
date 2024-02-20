@@ -32,7 +32,7 @@ export const useFilesStore = defineStore('files', () => {
 
       const listRef = ref(storage, 'images/')
       const listResult = await listAll(listRef)
-
+      files.value = [] 
       for (const itemRef of listResult.items) {
         const url = await getDownloadURL(itemRef)
         const metadata = await getMetadata(itemRef)
@@ -82,6 +82,10 @@ export const useFilesStore = defineStore('files', () => {
     }
   }
 
+  nextTick(() => {
+    fetchFilesFromFirebase()
+  })
+
   const areaDropFiles = async (event) => {
     try {
       isLoading.value = true
@@ -116,9 +120,7 @@ export const useFilesStore = defineStore('files', () => {
     }
   }
 
-  nextTick(() => {
-    fetchFilesFromFirebase()
-  })
+
 
   return {
     files,
