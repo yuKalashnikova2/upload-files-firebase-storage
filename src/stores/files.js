@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref as vueRef, onMounted } from 'vue'
+import { ref as vueRef, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 import {
@@ -22,9 +22,7 @@ export const useFilesStore = defineStore('files', () => {
 
   const router = useRouter()
 
-
   const closeError = () => {
-    console.log('РАБОТАЕТ', isError.value)
     isError.value = false
   }
 
@@ -34,6 +32,7 @@ export const useFilesStore = defineStore('files', () => {
 
       const listRef = ref(storage, 'images/')
       const listResult = await listAll(listRef)
+
       for (const itemRef of listResult.items) {
         const url = await getDownloadURL(itemRef)
         const metadata = await getMetadata(itemRef)
@@ -45,9 +44,7 @@ export const useFilesStore = defineStore('files', () => {
         })
       }
       if (files.value.length > 0) {
-        router.push('/upload-files')
-      } else {
-        router.push('/')
+        router.replace('/upload-files')
       }
     } catch (error) {
       isError.value = true
@@ -58,30 +55,28 @@ export const useFilesStore = defineStore('files', () => {
     }
   }
 
-  onMounted(fetchFilesFromFirebase)
+  const addFilesAndRedirect = async (newFiles) => {
+    for (const file of newFiles) {
+      const imageRef = ref(storage, 'images/' + file.name)
+      const snapshot = await uploadBytes(imageRef, file)
+      console.log(snapshot.metadata)
+    }
+
+    await fetchFilesFromFirebase()
+  }
+
   const handleFileChange = async (event) => {
     try {
       isLoading.value = true
 
       const newFiles = Array.from(event.target.files)
-      files.value = files.value.concat(newFiles)
-      console.log(newFiles)
-      if (files.value.length > 0) {
-        router.push('/upload-files')
-      } else {
-        router.push('/')
-      }
-      for (const file of newFiles) {
-        const imageRef = ref(storage, 'images/' + file.name)
-        const snapshot = await uploadBytes(imageRef, file)
+      await addFilesAndRedirect(newFiles)
 
-        fetchFilesFromFirebase()
-        console.log(snapshot.metadata)
-      }
+      console.log(newFiles)
     } catch (error) {
       isError.value = true
       errorMessage.value = error
-      console.error('ОШИБКА', error)
+      console.error('ERROR', error)
     } finally {
       isLoading.value = false
     }
@@ -92,18 +87,11 @@ export const useFilesStore = defineStore('files', () => {
       isLoading.value = true
       event.preventDefault()
       const newFiles = Array.from(event.dataTransfer.files)
-      // files.value = files.value.concat(newFiles)
-
-      console.log('ПЕРЕТАСКИВАНИЕ ДРАГ ЭНД ДРОП', files.value)
-      for (const file of newFiles) {
-        const imageRef = ref(storage, 'images/' + file.name)
-        const snapshot = await uploadBytes(imageRef, file)
-        fetchFilesFromFirebase()
-      }
+      await addFilesAndRedirect(newFiles)
     } catch (error) {
       isError.value = true
       errorMessage.value = error
-      console.error('ОШИБКА', error)
+      console.error('ERROR', error)
     } finally {
       isLoading.value = false
     }
@@ -115,14 +103,22 @@ export const useFilesStore = defineStore('files', () => {
       const imageRef = ref(storage, 'images/' + file.name)
       await deleteObject(imageRef)
       files.value = files.value.filter((f) => f !== file)
+
+      if (files.value.length === 0) {
+        router.replace('/')
+      }
     } catch (error) {
       isError.value = true
       errorMessage.value = error
-      console.error('ОШИБКА УДАЛЕНИЯ ЭЛЕМЕНТА', error)
+      console.error('ERROR REMOVE FILE', error)
     } finally {
       isLoading.value = false
     }
   }
+
+  nextTick(() => {
+    fetchFilesFromFirebase()
+  })
 
   return {
     files,
