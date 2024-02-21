@@ -1,14 +1,12 @@
 <script setup>
-
 import { useFilesStore } from '../stores/files.js'
 const store = useFilesStore()
-
 </script>
 
 <template>
-  <div class="upload">
+  <label class="upload" for="upload-file">
     <img class="upload__image" src="/upload-cloud.svg" alt="upload" />
-    <label class="upload__label" for="upload-file">Upload</label>
+    Upload
     <input
       @change="store.handleFileChange"
       type="file"
@@ -16,7 +14,7 @@ const store = useFilesStore()
       id="upload-file"
       class="upload__input"
     />
-  </div>
+  </label>
 </template>
 
 <style lang="scss">
@@ -38,11 +36,6 @@ const store = useFilesStore()
   &:hover {
     opacity: 0.8;
     cursor: pointer;
-  }
-  &__label {
-    &:hover {
-      cursor: pointer;
-    }
   }
   &__input {
     display: none;
